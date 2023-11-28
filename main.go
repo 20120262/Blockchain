@@ -1,9 +1,6 @@
 package main
 
-import (
-	"awesomeProject/Blockchain"
-)
-
 func main() {
-	bc := Blockchain.NewBlockChain()
+	cli := CLI{}
+	cli.Run()
 }
