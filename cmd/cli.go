@@ -1,6 +1,7 @@
-package Blockchain
+package cmd
 
 import (
+	"Blockchainlab/pkg"
 	"flag"
 	"fmt"
 	"log"
@@ -12,14 +13,14 @@ import (
 type CLI struct{}
 
 func (cli *CLI) createBlockchain(address string) {
-	bc := CreateBlockchain(address)
-	bc.db.Close()
+	bc := pkg.CreateBlockchain(address)
+	bc.Db.Close()
 	fmt.Println("Done!")
 }
 
 func (cli *CLI) getBalance(address string) {
-	bc := NewBlockchain(address)
-	defer bc.db.Close()
+	bc := pkg.NewBlockchain(address)
+	defer bc.Db.Close()
 
 	balance := 0
 	UTXOs := bc.FindUTXO(address)
@@ -48,8 +49,8 @@ func (cli *CLI) validateArgs() {
 
 func (cli *CLI) printChain() {
 	// TODO: Fix this
-	bc := NewBlockchain("")
-	defer bc.db.Close()
+	bc := pkg.NewBlockchain("")
+	defer bc.Db.Close()
 
 	bci := bc.Iterator()
 
@@ -61,7 +62,7 @@ func (cli *CLI) printChain() {
 		fmt.Println("Transaction (input output):")
 		fmt.Println("input: ", block.Transactions[0].Vin)
 		fmt.Println("output: ", block.Transactions[0].Vout)
-		pow := NewProofOfWork(block)
+		pow := pkg.NewProofOfWork(block)
 		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
 		fmt.Println()
 
@@ -72,11 +73,10 @@ func (cli *CLI) printChain() {
 }
 
 func (cli *CLI) send(from, to string, amount int) {
-	bc := NewBlockchain(from)
-	defer bc.db.Close()
-
-	tx := NewUTXOTransaction(from, to, amount, bc)
-	bc.MineBlock([]*Transaction{tx})
+	bc := pkg.NewBlockchain(from)
+	defer bc.Db.Close()
+	tx := pkg.NewUTXOTransaction(from, to, amount, bc)
+	bc.MineBlock([]*pkg.Transaction{tx})
 	fmt.Println("Success!")
 }
 

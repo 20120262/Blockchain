@@ -1,6 +1,10 @@
 package main
 
+import (
+	"Blockchainlab/cmd"
+)
+
 func main() {
-	cli := CLI{}
+	cli := cmd.CLI{}
 	cli.Run()
 }
